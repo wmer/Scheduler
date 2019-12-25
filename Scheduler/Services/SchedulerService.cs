@@ -1,4 +1,5 @@
-﻿using Scheduler.Exceptions;
+﻿using Scheduler.Events;
+using Scheduler.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,6 +8,9 @@ using System.Timers;
 namespace Scheduler.Services {
     internal class SchedulerService {
         private Timer _timer;
+
+        public event TaskStartEventHandler TaskStart;
+        public event TaskEndEventHandler TaskEnd;
 
         public SchedulerService() {
             _timer = new Timer();
@@ -23,8 +27,17 @@ namespace Scheduler.Services {
                     if(interval > TimeSpan.Zero && _timer.Interval != interval.TotalMilliseconds) {
                         _timer.Interval = interval.TotalMilliseconds;
                     }
+                    OnTaskStart(this, new TaskStartEventArgs(DateTime.Now, timesRun));
+                    var watchGlobal = System.Diagnostics.Stopwatch.StartNew();
                     task.Invoke();
+
+                    watchGlobal.Stop();
+
+                    var elapsedMsGlobal = watchGlobal.ElapsedMilliseconds;
+                    var tGlobal = TimeSpan.FromMilliseconds(elapsedMsGlobal);
                     timesRun++;
+                    OnTaskEnd(this, new TaskEndEventArgs(DateTime.Now, tGlobal, timesRun));
+
                     if(timesRun == times) {
                         _timer.Stop();
                     }
@@ -38,5 +51,13 @@ namespace Scheduler.Services {
         }
 
         public void Stop() => _timer.Stop();
+
+        public void OnTaskStart(object sender, TaskStartEventArgs e) {
+            TaskStart?.Invoke(sender, e);
+        }
+
+        private void OnTaskEnd(object sender, TaskEndEventArgs e) {
+            TaskEnd?.Invoke(sender, e);
+        }
     }
 }
