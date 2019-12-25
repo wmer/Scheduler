@@ -7,11 +7,13 @@ namespace Scheduler.Events {
         public DateTime EndDate { get; set; }
         public TimeSpan TotalTime { get; set; }
         public int TotalTimes { get; set; }
+        public bool LastExecution { get; set; }
 
-        public TaskEndEventArgs(DateTime endDate, TimeSpan totalTime, int totalTimes) {
+        public TaskEndEventArgs(DateTime endDate, TimeSpan totalTime, int totalTimes, bool lastExecution) {
             EndDate = endDate;
             TotalTime = totalTime;
             TotalTimes = totalTimes;
+            LastExecution = lastExecution;
         }
     }
 

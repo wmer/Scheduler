@@ -19,6 +19,7 @@ namespace Scheduler.Services {
         public void ScheduleTask(DateTime startDate, Action task, TimeSpan interval = default, int times = -1) {
             if(startDate > DateTime.Now) {
                 var timesRun = 0;
+                var lastExecution = false;
 
                 TimeSpan timeToGo = startDate - DateTime.Now;
 
@@ -36,11 +37,12 @@ namespace Scheduler.Services {
                     var elapsedMsGlobal = watchGlobal.ElapsedMilliseconds;
                     var tGlobal = TimeSpan.FromMilliseconds(elapsedMsGlobal);
                     timesRun++;
-                    OnTaskEnd(this, new TaskEndEventArgs(DateTime.Now, tGlobal, timesRun));
 
                     if(timesRun == times) {
                         _timer.Stop();
+                        lastExecution = true;
                     }
+                    OnTaskEnd(this, new TaskEndEventArgs(DateTime.Now, tGlobal, timesRun, lastExecution));
                 };
                 _timer.AutoReset = interval > TimeSpan.Zero;
                 _timer.Enabled = true;
