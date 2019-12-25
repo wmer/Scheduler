@@ -4,6 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>William Santana</Authors>
     <Description>A simple task scheduling library</Description>
+    <RepositoryUrl>https://github.com/wmer/Scheduler</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/wmer/Scheduler</PackageProjectUrl>
+    <PackageTags>Task, Tasks,Scheduler, Scheduling</PackageTags>
   </PropertyGroup>
 
 </Project>
