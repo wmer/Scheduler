@@ -20,10 +20,10 @@ namespace Scheduler.Services {
 
                 _timer.Interval = timeToGo.TotalMilliseconds;
                 _timer.Elapsed += (s, e) => {
-                    task.Invoke();
                     if(interval > TimeSpan.Zero && _timer.Interval != interval.TotalMilliseconds) {
                         _timer.Interval = interval.TotalMilliseconds;
                     }
+                    task.Invoke();
                     timesRun++;
                     if(timesRun == times) {
                         _timer.Stop();
